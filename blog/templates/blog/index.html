@@ -1,0 +1,62 @@
+{% extends 'blog/base.html' %}
+{% load markdowntags %}
+{% load encodeurl %}
+
+{% block head %}
+    <title>CodingParadox</title>
+{% endblock %}
+
+{% block content %}
+
+    {# entry list #}
+    {% for entry in entries_paginated %}
+    <div class="card-panel">
+        <a href="{% url 'blog:entry_detail' slug=entry.slug  %}"><h4>{{entry}} </h4> </a>
+        <span class="grey-text text-darken-1">Posted on : {{entry.created}}</span>
+        <br/>
+            Tags : 
+            {% for tag in entry.tags.all %}
+            <a href=" {% url 'blog:entry_search' %}?query={{tag.title|encodeurl}}">{{tag}} </a> &nbsp;
+            {% endfor %}
+
+        <div class="blog-entry grey lighten-4 flow-text" style="padding-left: 10px;">
+            {{ entry.body|markdownify|safe|truncatechars_html:300 }}
+        </div>
+
+        <a href="{% url 'blog:entry_detail' slug=entry.slug  %}"><h5 class="blue-text text-lighten-2">Read More... </h5> </a>
+    </div>
+    {% endfor %}
+    {#---------------#}
+
+    {# pagination #}
+    <div class="pagination">
+        <div class="row center-align">
+
+            <div class="col s12 m4">
+                {% if entries_paginated.has_previous %}
+                    <a href="?page={{ entries_paginated.previous_page_number }}" class="waves-effect waves-light btn-large red darken-2">newer</a>
+                {% else %}
+                    <a class="btn-large disabled">newer</a>
+                {% endif %}
+
+            </div>
+
+            <div class="col s12 m4">
+                <span class="teal-text text-darken-2">
+                    page {{ entries_paginated.number }} of {{ entries_paginated.paginator.num_pages }}.
+                </span>
+            </div>
+
+            <div class="col s12 m4">
+                {% if entries_paginated.has_next %}
+                    <a href="?page={{ entries_paginated.next_page_number }}" class="waves-effect waves-light btn-large red darken-2">older</a>
+                {% else %}
+                    <a class="btn-large disabled">older</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    {# --------------- #}
+{% endblock %}

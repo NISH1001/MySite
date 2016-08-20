@@ -1,0 +1,119 @@
+html
+{
+    font-family: roboto, sans-serif;
+}
+body
+{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+main
+{
+    flex: 1 0 auto;
+}
+#desktop-search::-webkit-input-placeholder { color: white; }
+#desktop-search::-moz-placeholder { color: white; }
+#mobile-search::-webkit-input-placeholder { color: red; }
+#mobile-search::-moz-placeholder { color: red; }
+
+::selection
+{
+    background: #ef9a9a;
+}
+::-moz-selection
+{
+    background: #ef9a9a;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+    font-family: serif;
+}
+
+p img
+{
+    max-width: 100%;
+    height: auto; 
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+
+.codehilite pre
+{
+    font-size: 0.8em;
+    background: #e3f2fd;
+    padding-left: 20px; 
+    padding-right: 20px; 
+}
+
+code
+{
+    font-size: 1em;
+    color: #b71c1c;
+    background: #eeeeee;
+}
+
+
+
+/*  for larger size screen */
+@media (min-width: 1001px)
+{
+    .blog-entry p
+    {
+        line-height: 200%;
+        font-size: 20px;
+    }
+
+    .blog-entry li
+    {
+        list-style-type: square;
+        margin-left: 20px;
+        padding-left: 4px;
+        font-size: 20px;
+        line-height: 200%;
+    }
+
+    .card-panel
+    {
+        margin-left: 20px;
+    }
+}
+
+.blog-entry blockquote
+{
+    background: #ffebee;
+    word-wrap: break-word;
+}
+
+/* for small size screen */
+@media (max-width: 1000px)
+{
+    .blog-entry p
+    {
+        line-height: 200%;
+        font-size: 20px;
+    }
+
+    .blog-entry li
+    {
+        list-style-type: square;
+        margin-left: 20px;
+        padding-left: 4px;
+        line-height: 200%;
+    }
+    .container
+    {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .card-panel .blog-entry
+    {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}

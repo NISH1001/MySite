@@ -1,0 +1,113 @@
+{% extends "blog/base.html" %}
+{% load markdowntags %}
+{% load encodeurl %}
+
+{% block head %}
+    <title>{{entry}}</title>
+{% endblock %}
+
+{% block content %}
+
+{# this is the main post element #}
+<div class="card-panel collection">
+    <a class="collection-item blue-text" href="{% url 'blog:entry_detail' slug=entry.slug %}"><h4>{{entry}} </h4> </a>
+    
+    <div class="collection-item"><p class="grey-text text-darken-1">Posted on : {{entry.created}}</p></div>
+    
+    <div class="collection-item">
+        Tags : 
+        {% for tag in entry.tags.all %}
+            <a href=" {% url 'blog:entry_search' %}?query={{tag.title|encodeurl}}">{{tag}} </a> &nbsp;
+        {% endfor %}
+    </div>
+
+    <div class="collection-item">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="nishPARADOX">Tweet</a>
+    </div>
+
+    <div class="collection-item blog-entry">
+        <div class="flow-text"> {{ entry.body|markdownify|safe }} </div>
+    </div>
+</div>
+
+{# main post end #}
+
+{% comment %}
+<div class="card-panel collection">
+    <div class="collection-item"><h5 class="blue-text"> comments ({{ comments|length }}) </h5></div>
+
+    {% if not comments %}
+        <h5 class="grey-text text-darken-1">no comments for this post til now</h5>
+    {% endif %}
+
+    {% for comment in comments %}
+        <ul class="collection">
+            <li class="collection-item" style="padding-left: 10px;">
+                <span class="grey-text text-darken-1">
+                    <b> {{comment.commenter}} </b> said on {{ comment.posted }}
+                </span>
+                <div class="grey lighten-3">
+                    <div class="blog-entry"> {{ comment.body|urlizetrunc:75|linebreaks }} </div>
+            </div>
+            </li>
+        </ul>
+    {% endfor %}
+</div>
+
+{# comment form #}
+<div class="card-panel">
+    <form action="{% url 'blog:entry_detail' slug=entry.slug %}" method="post" onsubmit="return validateComment()">
+    {% csrf_token %}
+        <input type="hidden" name="entryid" value="{{entry.id}}"/>
+        
+        <div class="input-field">
+            <i class="mdi-action-account-circle prefix"></i>
+            <label> Name </label>
+            <input id="commenter" type="text" name="commenter" value="anonymous" />
+        </div>
+
+        <br/>
+
+        <div class="input-field">
+            <i class="mdi-editor-mode-edit prefix"></i>
+            <textarea class="materialize-textarea" id="comment"  name="body"></textarea>
+            <label for="comment">Comment</label>
+        </div>
+
+        <div class="center-align">
+            <button class="btn-floating btn-large waves-effect waves-light red" type="submit" name="submit">
+                <i class="mdi-content-add"></i>
+                {# <i class="mdi-content-send-right"></i> #}
+            </button>
+        </div>
+    </form>
+</div>
+{# -------------- comment-------------------------- #}
+{% endcomment %}
+
+{% endblock %}
+
+
+{% block js %}
+
+        {# tweet button #}
+        <script>
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+        </script>       
+
+    <script>
+        function validateComment()
+        {
+            commenter = document.getElementById('commenter').value;
+            commenter = commenter.trim();
+            body = document.getElementById('comment').value;
+            body = body.trim();
+            if(commenter.length <1 || body.length<1)
+            {
+                Materialize.toast("empty name/comment", 1000);
+                return false;
+            }
+            else return true;
+        }
+    </script>
+{% endblock %}

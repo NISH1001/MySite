@@ -1,0 +1,156 @@
+[Django] is a high-level **Python** Web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.
+
+If you have heard about **Laravel** which is Php-based web framework, **Django** is similar.
+
+> So let's get started. But first
+
+### Django is [MVC] framework
+If you haven't heard the word *MVC*, it (Model–view–controller) is a software architectural pattern for implementing user interfaces. It divides a given software application into three interconnected parts, so as to separate internal representations of information from the ways that information is presented to or accepted from the user.
+What this means is, even if you change the internal logic of the program, it doesn't simply affect the external view or should I say the UI element and vice versa.
+
+* M(Model) : *the database part*
+* V(View) : *the UI part*
+* C(Controller) : *the internal logic part*
+
+> But django is actually **MTV (Model-Template-View)** which is same as MVC except the *Template* and *View* part of **MTV** are exchanged with *View* and *Controller* part of **MVC**.
+
+* M(Model) : *the database part*
+* T(Template) : *the UI part*
+* V(View) : *the internal logic part*
+
+> Let's Start : I shall use python3 and django 1.8 (latest at the time of writing this post).
+> I am assuming you have python3 already installed in your device (well, ubuntu already comes with that).
+
+> For windows user, there are lot of stuffs out there to install python in windows.
+
+### Installing pip3, virtualenv, django
+
+* #### pip3
+  Pip3 is the package manager for python3 packages. Just open up the terminal and hit:
+
+  ```
+  sudo apt-get install python3-pip
+  ```
+
+  To be sure, just hit ``` pip3 ```
+
+* #### virtualenv
+  virtualenv is a tool that allows different versions of python, packages to coexisit; each in its own separate environmaent. Just open up the terminal and hit:
+
+  ```
+  sudo pip3 install virtualenv
+  ```
+
+  To be sure, just hit ```virtualenv```
+
+  > NOTE:
+  > You have to install ```virtualenv``` through ```pip3``` not ```pip```(for python2) because conflicts are highly probable to occur as I have told I'm using python3 for this tutorial (not python version 2)
+
+* #### setting up our *virtual environment*
+  Open up the terminal and hit:
+  ```
+  virtualenv --no-site-packages virtualenv_django
+  ```
+  > ```--no-site-packages```  is not (install) access to global packages. If you want to install the global packages in your system just use ```--system-site-packages```
+
+  Here *virtualenv_django* can be anyname, but I named it like this to be more clear
+
+  A folder named 'virtualenv_django' appears after the process is done. Open up terminal in that and then we activate this environment by hitting:
+
+  ```
+  source bin/activate
+  ```
+
+  After the process, the environment name appears on the terminal path as: *(virtualenv_django)*. Now we have to check the python version that resides in this environment. So just hit:
+
+  ```
+  python --version
+  ```
+
+  If it show version 3, then everything is good. Now time for django setup.
+
+  Also check if ```pip``` is there in this environment by hitting this command in the activated environment
+
+  > NOTE: Make sure you parent folder doesn't have any folder names with spaces. If there are any spaces in any of the parent directories, remove those spaces. Spaces lead to breaking the environment paths here.
+
+
+* #### installing django
+  Now, we are ready to install django. In the activated environment, just hit :
+
+  ```
+  pip install django
+  ```
+
+  . To check if django is there, in the activated environement hit ```python``` and in the python interpretor check the django as :
+
+    	import django
+    	django.VERSION
+
+
+  At the time of this writing, django version was 1.8 LTS
+  > NOTE: Do not give root priveleges for pip installation i.e.
+  > Don't do ```sudo pip install django```
+  > It installs django in system path not inside the virtual environement
+
+### Setting up our django project
+
+Now, since we have everything running up in our virtual environment, we are ready to setup our project.
+
+> There are many tutorials out there you can find about creating blogs in django. But here I am gonna filter everything and teach you in step by step.
+
+Let's create a folder named *projects* inside the virtual environment (be sure you are inside a fit-n-fine envirionment as told earlier).
+
+Move (*cd*) to that folder and then hit:
+
+```
+django-admin startproject mysite
+```
+
+This creates a folder named *mysite* which shall be our project parent folder.
+
+> NOTE: In django we shall have one project inside which many applications (app) can be created.
+> So here, we have project called **mysite** and then we will create an application, later, called **blog** in the project
+
+Now, let's move into the *mysite* folder and there you can find only two things (a folder and python file) :
+
+* mysite : It is the folder that gets the name of our project. Here, project's root python files exist:
+
+  * *settings.py* : As the name suggests, it consists various    settings for our entire project like which *apps*, *databases*,etc.
+
+  * *urls.py* : It is the file that contains our root urls that points to htmls in our project. Usually, what I'd like to do is to include urls from *applicatoin*'s in this as each application has it's own urls file too
+
+
+* manage.py : it is our main manager file that is used to perform various django operations like starting servers, database related stuffs,etc.
+
+### lets start our server
+Django has its own development server independent of system's apache server. As told earlier, *manage.py* is our main manager file.
+
+So we use *manage.py* to create our server as :
+
+```
+python manage.py runserver
+```
+
+Open up the browser and go to *localhost:8000*. There you shall see a "congratlations" page.
+
+Congratulations you are up and running with django.
+
+> NOTE: *8000* is a port address. You can specify other ports while starting up that server as
+``` python manage.py 8800``` or any other port
+> Also remember, two servers can't be started on same port because of some resources lockdown.
+
+```
+And that's it for now. I hope it was helpful. If it was dissatisfying do let me know.Next part is where we start our real application.
+```
+
+
+
+
+
+
+
+
+
+
+[Django]:https://www.djangoproject.com/
+[MVC]:http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller

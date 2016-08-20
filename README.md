@@ -1,2 +1,2 @@
 # MySite
-My personal site built using django
+this is a blog developed using django 1.8

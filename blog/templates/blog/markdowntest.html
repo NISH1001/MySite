@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{% load markdowntags %}
+
+{% block content %}
+    <div class="card-panel blog-entry">
+        <div class="row">
+            <div class="col s12 flow-text">
+                {{ markdowntest|markdownify|safe}}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

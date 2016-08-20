@@ -1,0 +1,308 @@
+{% load staticfiles %}
+{% load encodeurl %}
+{% load shuffle %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% block head %}
+    {% endblock %}
+
+    <script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="{% static 'css/materialize.min.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/blog.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/codehilite.css' %}" type="text/css" rel="stylesheet">
+    <style>
+        {% block style %} {% endblock %}
+    </style>
+
+</head>
+
+<body>
+    {# navbar when large --- sidebar when small (shrunken) #}
+    <nav>
+        <div class="nav-wrapper z-depth-1 red darken-2">
+            
+            <div class="row">
+
+                {# mobile #}
+                <div class="col s3" id="mobile">
+                    <a href="#" data-activates="mobile-sidebar" class="button-collapse">
+                        <i class="material-icons">reorder</i>
+                    </a>
+
+                    <ul class="side-nav collection" id="mobile-sidebar">
+                        {#--- search box ---#}
+                        <li class="collection-item">
+                        <form method="GET" action="{% url 'blog:entry_search' %}">
+                                <div class="row">
+                                    <div class="col s2 m2">
+                                        <i class="material-icons" id="mobile-submit" type="submit">search</i>
+                                    </div>
+
+                                    <div class="col s10 m10">
+                                        <div class="input-field black-text">
+                                            <input id="mobile-search" 
+                                                style="height:35px; width:120px;" 
+                                                type="text" 
+                                                name="query" 
+                                                placeholder="search" 
+                                            required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                        {#--- end search box ---#}
+
+                        <li class="collection-item"><a href="{% url 'blog:index' %}"><b>HOME</b></a></li>
+                        <li class="collection-item"><a href="#tagcloud" class=""><b>TAG CLOUD</b></a></li>
+                        <li class="collection-item"><a href="#archives" class=""><b>ARCHIVES</b></a></li>
+                        <li class="collection-item"><a href="{% url 'blog:rss' %}"><b>RSS</b></a></li>
+                        <li class="collection-item"><a href="{% url 'blog:about' %}"><b>ABOUT</b></a></li>
+                    </ul>
+                </div>
+                {#---mobile end-----#}
+
+                {#---- normal ----- #}
+                {# --- search box --- #}
+                <div class="col s4 hide-on-med-and-down" id="desktop">
+                    <form method="GET" action="{% url 'blog:entry_search' %}">
+                        <div class="row">
+
+                            <div class="col s1">
+                                <button id="desktop-submit" class="mdi-action-search btn-floating btn-small waves-light red" type="submit" >
+                                </button>
+                            </div>
+                            <div class="col s11">
+                                <div class="input-field">
+                                    <input id="desktop-search" type="text" placeholder="search" name="query" required>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                {#--- end search box --- #}
+
+                {#--- rest navbar ---#}
+                <div class="col s8">
+                    <a href="{% url 'blog:index' %}" class="brand-logo center">CodingParadox</a>
+
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="{% url 'blog:rss' %}">RSS</a></li>
+                        <li><a href="{% url 'blog:about' %}">ABOUT</a></li>
+                    </ul>
+                </div>
+                {#--- end rest of navbar ---#}
+            {#------#}
+
+            </div>
+            
+        </div>
+    </nav>
+    {# -------------------- #}
+
+   
+    {# main content #}
+    <div class="" style="width:100%;">
+    <br/>
+    <br/>
+    <div class="row">
+
+        <!-- actual contents -->
+        <div class="col s12 l10 container">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <!-- end actual contents -->
+
+        <!-- side bar -->
+        <div class="col s12 l2 container">
+
+            <!-- archives -->
+            <div class="row">
+                <div class="col s12 card" id="archives">
+                    <h5 class="red-text text-darken-3 center"> Archives </h5>
+                    {% regroup global_entries by created|date:"Y" as year_list %}
+
+                    <!-- collapsible for year -->
+                    <ul class="collapsible" data-collapsible="expandable">
+                        {% for year in year_list %}
+                            <li>
+                                <div class="collapsible-header">{{year.grouper}}</div>
+                                <div class="collapsible-body">
+
+                                    {% regroup year.list by created|date:"F" as month_list %}
+
+                                    <div class="row">
+                                        <div class="col s12">
+                                    
+                                            <!-- create collapsible for every month -->
+                                            <ul class="collapsible collection" data-collapsible="expandable">
+                                                {% for month in month_list %}
+                                                <li>
+                                                <div class="collapsible-header">{{month.grouper}}</div>
+                                                <div class="collapsible-body">
+                                                {% for entry in month.list %}
+                                                <div class="row">
+                                                    <div class="col s12">
+                                                    <a class="collection-item blue-text text-darken-2" 
+                                                        href="{% url 'blog:entry_detail' slug=entry.slug  %}">
+                                                        {{ entry }}
+                                                    </a>
+                                                    </div>
+                                                </div>
+                                                {% endfor %} {# endfor for entry loop #}
+                                                </div>
+                                                </li>
+                                                {% endfor %} {#  endfor for month loop #}
+                                            </ul>
+                                            <!-- end month collapsible -->
+
+                                        <div>
+                                    </div>
+
+                                </div>
+                            </li>
+                        {% endfor %} {# endfor for year loop #}
+                    </ul>
+                    <!-- end collapsible for year -->
+
+                </div>
+            </div>
+            <!-- end archives -->
+
+            <!-- tag cloud -->
+            <div class="row">
+                <div class="col s12 card" id="tagcloud">
+                    <h5 class="red-text text-darken-3 center">Tag Cloud </h5>
+                    <div class="divider"></div>
+                    {% for tag,scale in tagcloud.items|shuffle %}
+                        <a href=" {% url 'blog:entry_search' %}?query={{tag|encodeurl}}"
+                            style="font-size: {{scale}}em"
+                        >
+                            {{tag}}
+                        </a>
+                        &nbsp;
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- end tag cloud -->
+
+        </div>
+        <!-- end sidebar -->
+
+    </div>
+    <!-- end row -->
+
+
+    <br/>
+    </div>
+    {# -------------------- #}
+
+    <footer class="page-footer red darken-2">
+        <div class="container">
+            <div class="row center-align">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Proudly developed using
+                        <a target="_blank" href="https://www.djangoproject.com/" class="grey-text text-lighten-3">
+                            <u>Django</u>
+                        </a>
+                    </h5>
+                </div>
+
+                <div class="col l4 offset-12 s12">
+                    <h5 class="white-text">Contact</h5>
+                    <ul>
+                        <li>
+                            <a class="grey-text text-lighten-3" target='_blank' 
+                                href="http://twitter.com/nishPARADOX">
+                                <img src = "{% static 'images/icons/twitter.png' %}" align="top" />
+                                twitter(@nishPARADOX)
+                            </a>
+                        </li>
+
+                        <li>
+                        <a class="grey-text text-lighten-3" target='_blank' 
+                            href="https://github.com/NISH1001">
+                            <img src = "{% static 'images/icons/github.png' %}" align="top" />
+                            github(NISH1001)
+                        </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 center-align">
+                    <a class="grey-text text-lighten-3" href="#"><u>Back To Top</u></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-copyright center-align">
+            © 2015 Copyright @ Nishan Pantha
+        </div>
+    </footer>
+
+    {% block js %}
+    {% endblock %}
+
+    <script>
+        $(document).ready(function()
+        {
+            $(".button-collapse").sideNav();
+            $(".modal-trigger").leanModal();
+
+            $('a[href*="#"]').click(function()
+            {
+                $($(this).attr("href")).effect("highlight", {color: '#ef9a9a'}, 4000);
+            });
+        });
+
+        $('#desktop #desktop-submit').on('click', function()
+        {
+            if($('#desktop #desktop-search').val().trim()=='')
+            {
+                Materialize.toast("emtpy search", 250);
+                return false;
+            }
+        });
+
+        $('#mobile #mobile-submit').on('click', function()
+        {
+            if($('#mobile #mobile-search').val().trim()=='')
+            {
+                Materialize.toast("emtpy search", 250);
+                return false;
+            }
+        });
+    </script>
+    <script src="{% static 'js/materialize.min.js' %}"></script>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-63014279-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+
+</html>
