@@ -48,7 +48,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'blog',
-    'nspellapp',
 )
 
 MIDDLEWARE_CLASSES = (

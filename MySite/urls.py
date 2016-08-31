@@ -19,7 +19,6 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'blog/', include('blog.urls', namespace='blog')),
-    url(r'nspell/', include('nspellapp.urls', namespace='nspellapp')),
     url(r'^$', include('blog.urls', namespace='blog')),
 
     url(r'^sitemap\.xml$', sitemap,
