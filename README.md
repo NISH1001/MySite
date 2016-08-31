@@ -1,2 +1,2 @@
 # MySite
-this is a blog developed using django 1.8
+this is a blog developed using django 1.9
